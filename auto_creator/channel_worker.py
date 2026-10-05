@@ -5,7 +5,6 @@ from pyrogram.errors import (
     FloodWait, 
     UsernameOccupied, 
     UsernameInvalid, 
-    ChannelsAdminPublicTooMany,
     RPCError
 )
 from auto_creator.config import API_ID, API_HASH
@@ -46,10 +45,9 @@ async def create_single_channel(session_string: str, title: str, username_candid
                 description=description or ""
             )
             chat_id = chat.id
-        except ChannelsAdminPublicTooMany:
-            return {"status": "quota_full", "error": "Public channel limit reached (max 10 public channels)."}
         except RPCError as e:
-            if "CHANNELS_ADMIN_PUBLIC_TOO_MANY" in str(e):
+            err_str = str(e).upper()
+            if "CHANNELS_ADMIN_PUBLIC_TOO_MANY" in err_str or "TOO_MUCH" in err_str or "TOO_MANY" in err_str:
                 return {"status": "quota_full", "error": "Public channel limit reached (max 10 public channels)."}
             return {"status": "error", "error": f"Failed to create channel: {str(e)}"}
 
@@ -63,13 +61,14 @@ async def create_single_channel(session_string: str, title: str, username_candid
             except (UsernameOccupied, UsernameInvalid):
                 await asyncio.sleep(0.5)
                 continue
-            except ChannelsAdminPublicTooMany:
-                return {"status": "quota_full", "error": "Public channel limit reached on this account."}
-            except Exception as e:
-                err_str = str(e)
-                if "CHANNELS_ADMIN_PUBLIC_TOO_MANY" in err_str:
+            except RPCError as e:
+                err_str = str(e).upper()
+                if "CHANNELS_ADMIN_PUBLIC_TOO_MANY" in err_str or "TOO_MUCH" in err_str or "TOO_MANY" in err_str:
                     return {"status": "quota_full", "error": "Public channel limit reached on this account."}
                 logger.warning(f"Failed setting username {uname}: {err_str}")
+                await asyncio.sleep(0.5)
+            except Exception as e:
+                logger.warning(f"Failed setting username {uname}: {e}")
                 await asyncio.sleep(0.5)
 
         if not assigned_username:
