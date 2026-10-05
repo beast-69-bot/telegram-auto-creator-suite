@@ -580,6 +580,22 @@ async def callback_handler(client: Client, query: CallbackQuery):
             )
         await query.message.reply_text(text)
 
+async def setup_commands():
+    from pyrogram.types import BotCommand
+    commands = [
+        BotCommand("start", "Main dashboard & menu"),
+        BotCommand("login", "Connect a new Telegram account"),
+        BotCommand("accounts", "Manage connected accounts & quotas"),
+        BotCommand("createbot", "Auto-create bots via @BotFather"),
+        BotCommand("createchannel", "Auto-create public channels"),
+        BotCommand("status", "Check running tasks progress"),
+        BotCommand("cancel", "Cancel ongoing wizard/action")
+    ]
+    try:
+        await bot.set_bot_commands(commands)
+    except Exception as e:
+        logger.warning(f"Could not set bot commands: {e}")
+
 if __name__ == "__main__":
     print("Starting Auto Creator Bot...")
     bot.run()
