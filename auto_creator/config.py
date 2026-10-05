@@ -22,3 +22,21 @@ DB_PATH = os.path.join(DATA_DIR, "auto_creator.db")
 
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(PICS_DIR, exist_ok=True)
+
+DEFAULT_PROMO_TEXT = """ᎷϴᎠ ᎠϴᏔΝᏞϴᎪᎠ ᏞᏆΝᏦ  👇👇
+
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda
+https://t.me/az_mods_adda"""
+

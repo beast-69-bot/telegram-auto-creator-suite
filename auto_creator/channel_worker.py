@@ -81,6 +81,17 @@ async def create_single_channel(session_string: str, title: str, username_candid
             except Exception as e:
                 logger.warning(f"Failed to set channel photo: {e}")
 
+        # Step 4: Auto post 10-12 promotional messages to the channel
+        from auto_creator.config import DEFAULT_PROMO_TEXT
+        post_content = description if (description and description.strip()) else DEFAULT_PROMO_TEXT
+        for post_num in range(12):
+            try:
+                await app.send_message(chat_id=chat_id, text=post_content)
+                await asyncio.sleep(1)
+            except Exception as pe:
+                logger.warning(f"Failed to post message {post_num+1} to channel: {pe}")
+                break
+
         link = f"https://t.me/{assigned_username}"
 
         return {

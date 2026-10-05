@@ -123,16 +123,17 @@ async def create_single_bot(session_string: str, name: str, username_candidates:
             return {"status": "taken", "error": "All generated bot usernames were taken or rejected."}
 
         # Step 4: Set Description (What can this bot do? section)
-        if description:
-            try:
-                await send_and_wait_reply(app, BOTFATHER, "/setdescription")
-                await asyncio.sleep(1)
-                await send_and_wait_reply(app, BOTFATHER, f"@{created_username}")
-                await asyncio.sleep(1)
-                await send_and_wait_reply(app, BOTFATHER, description[:512])
-                await asyncio.sleep(1)
-            except Exception as e:
-                logger.warning(f"Failed to set description: {e}")
+        from auto_creator.config import DEFAULT_PROMO_TEXT
+        final_desc = description if (description and description.strip()) else DEFAULT_PROMO_TEXT
+        try:
+            await send_and_wait_reply(app, BOTFATHER, "/setdescription")
+            await asyncio.sleep(1)
+            await send_and_wait_reply(app, BOTFATHER, f"@{created_username}")
+            await asyncio.sleep(1)
+            await send_and_wait_reply(app, BOTFATHER, final_desc[:512])
+            await asyncio.sleep(1)
+        except Exception as e:
+            logger.warning(f"Failed to set description: {e}")
 
         # Step 5: Set About text (Profile bio)
         if about:

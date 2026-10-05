@@ -402,14 +402,18 @@ async def message_input_handler(client: Client, message: Message):
             data["base_username"] = message.text.strip().replace("@", "")
             wiz["step"] = "description"
             await message.reply_text(
-                "**Step 3:** Send the **Description** (text shown when opening the bot/channel).\n"
-                "*(Or type `/skip` to skip)*"
+                "**Step 3:** Send the **Description**.\n\n"
+                "💡 *Type `/default` or `/skip` to automatically use the default MOD DOWNLOAD LINKS promo text!*"
             )
             return
 
         elif step == "description":
             txt = message.text.strip()
-            data["description"] = "" if txt == "/skip" else txt
+            from auto_creator.config import DEFAULT_PROMO_TEXT
+            if txt in ("/skip", "/default", ""):
+                data["description"] = DEFAULT_PROMO_TEXT
+            else:
+                data["description"] = txt
             
             if wtype == "bot":
                 wiz["step"] = "about"
